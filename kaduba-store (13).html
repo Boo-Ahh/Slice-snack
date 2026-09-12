@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>slice.snacks - Plantain Chips</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='31' fill='%231C4A3A'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-weight='800' font-size='34' fill='%23F4A623' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='31' fill='%231C4A3A'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-weight='800' font-size='34' fill='%23F4A623' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--primary:#1C4A3A;--primary-light:#2F7A56;--primary-dark:#0C2A20;--primary-tint:#E8F1EC;--accent:#D4870E;--accent-light:#F4A623;--accent-glow:rgba(212,135,14,0.15);--bg:#FFFBF5;--bg-alt:#F5EFE6;--card:#FFFFFF;--text:#1A1A1A;--text-secondary:#6B7280;--text-muted:#9CA3AF;--border:#E8E2D9;--border-light:#F0ECE4;--success:#059669;--success-bg:#ECFDF5;--danger:#DC2626;--danger-bg:#FEF2F2;--warning:#D97706;--warning-bg:#FFFBEB;--info:#2563EB;--info-bg:#EFF6FF;--radius:12px;--radius-sm:8px;--radius-lg:16px;--shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 10px 30px rgba(0,0,0,0.1);--shadow-xl:0 20px 50px rgba(0,0,0,0.12);--transition:0.25s cubic-bezier(0.4,0,0.2,1);--font-display:'Playfair Display',Georgia,serif;--font-body:'DM Sans',-apple-system,sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+button{cursor:pointer;font-family:inherit;border:none;background:none}
+input,select,textarea{font-family:inherit;font-size:inherit}
+h1,h2,h3,h4,h5{font-family:var(--font-display);line-height:1.2}
+#toast-container{position:fixed;top:20px;right:20px;z-index:10000;display:flex;flex-direction:column;gap:10px}
+.toast{padding:14px 20px;border-radius:var(--radius-sm);color:#fff;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;transform:translateX(120%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);box-shadow:var(--shadow-lg);min-width:280px}
+.toast.show{transform:translateX(0)}
+.toast-success{background:var(--success)}
+.toast-error{background:var(--danger)}
+.toast-warning{background:var(--warning)}
+.toast-info{background:var(--info)}
+#modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:9000;display:none;align-items:center;justify-content:center;padding:20px}
+#modal-overlay.active{display:flex}
+.modal-box{background:var(--card);border-radius:var(--radius-lg);max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-xl);animation:modalIn 0.3s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-header h3{font-size:18px}
+.modal-close{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:var(--transition)}
+.modal-close:hover{background:var(--bg-alt);color:var(--text)}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+.nav{position:sticky;top:0;z-index:1000;background:rgba(255,251,245,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border-light)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:68px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--primary);cursor:pointer}
+.nav-logo span{color:var(--accent)}
+.logo-mark{width:38px;height:38px;flex-shrink:0}
+.hero-logo{width:64px;height:64px;margin-bottom:20px}
+.hero-logo-wrap{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-links a{font-size:14px;font-weight:500;color:var(--text-secondary);transition:var(--transition);position:relative}
+.nav-links a:hover,.nav-links a.active{color:var(--primary)}
+.nav-links a.active::after{content:'';position:absolute;bottom:-22px;left:0;right:0;height:2px;background:var(--accent);border-radius:1px}
+.nav-cart{position:relative;font-size:19px;color:var(--primary);padding:6px}
+.nav-cart-badge{position:absolute;top:-4px;right:-6px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.nav-admin-btn{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;transition:var(--transition);overflow:hidden}
+.nav-admin-btn svg{width:20px;height:20px}
+.nav-admin-btn:hover{border-color:var(--primary);transform:scale(1.06)}
+.mobile-toggle{display:none;font-size:22px;color:var(--text)}
+.hero{position:relative;min-height:70vh;display:flex;align-items:center;overflow:hidden;background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 50%,var(--primary-light) 100%)}
+.hero-pattern{position:absolute;inset:0;opacity:0.08;background-image:radial-gradient(circle at 20% 50%,#fff 1px,transparent 1px),radial-gradient(circle at 80% 20%,#fff 1px,transparent 1px),radial-gradient(circle at 60% 80%,#fff 1px,transparent 1px);background-size:60px 60px,80px 80px,50px 50px}
+.hero-content{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:0 24px}
+.hero-cta-slideshow{position:relative;height:44px;margin-bottom:22px;overflow:hidden}
+.hero-cta-slide{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:clamp(22px,3vw,30px);font-weight:700;color:#fff;opacity:0;transform:translateY(16px);transition:opacity 0.5s ease,transform 0.5s ease}
+.hero-cta-slide.active{opacity:1;transform:translateY(0)}
+.hero-cta-slide:nth-child(1){color:rgba(255,255,255,0.9)}
+.hero-cta-slide:nth-child(2){color:var(--accent-light)}
+.hero-runner{position:absolute;bottom:26px;font-size:22px;color:rgba(255,255,255,0.5);animation:runAcross 7s linear infinite}
+@keyframes runAcross{0%{left:-40px;opacity:0}5%{opacity:1}90%{opacity:1}100%{left:105%;opacity:0}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(212,135,14,0.35)}50%{box-shadow:0 0 0 8px rgba(212,135,14,0)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.fade-in-up{animation:fadeInUp 0.7s cubic-bezier(0.4,0,0.2,1) both}
+.hero-logo{animation:floatY 3.5s ease-in-out infinite}
+.hero-text h1{animation:fadeInUp 0.8s cubic-bezier(0.4,0,0.2,1) both}
+.hero-text p{animation:fadeInUp 0.8s cubic-bezier(0.4,0,0.2,1) 0.15s both}
+.section-header{animation:fadeInUp 0.6s ease both}
+.product-card{opacity:0;animation:fadeInUp 0.6s cubic-bezier(0.4,0,0.2,1) both}
+.nav-cart-badge{animation:pulseGlow 1.8s ease-in-out infinite}
+.btn-primary:active{transform:scale(0.96)}
+.product-card-img img{transition:transform 0.6s cubic-bezier(0.4,0,0.2,1)}
+.hero-text h1{font-size:clamp(40px,6vw,72px);font-weight:900;color:#fff;margin-bottom:20px;letter-spacing:-1px}
+.hero-text h1 em{font-style:normal;color:var(--accent-light)}
+.hero-text p{font-size:18px;color:rgba(255,255,255,0.75);margin-bottom:36px;max-width:480px;line-height:1.7}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:50px;font-size:14px;font-weight:600;transition:var(--transition)}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#c17a0a;transform:translateY(-1px);box-shadow:0 6px 20px rgba(212,135,14,0.3)}
+.btn-outline{border:1.5px solid var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+.btn-dark{background:var(--primary);color:#fff}
+.btn-dark:hover{background:var(--primary-dark)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{background:#b91c1c}
+.btn-sm{padding:8px 18px;font-size:13px}
+.btn-xs{padding:5px 12px;font-size:12px;border-radius:6px}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none !important;box-shadow:none !important}
+.section{padding:60px 24px;max-width:1200px;margin:0 auto}
+.section-header{text-align:center;margin-bottom:40px}
+.section-header h2{font-size:32px;font-weight:800;color:var(--text);margin-bottom:8px}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px}
+.product-card{background:var(--card);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border-light);transition:var(--transition)}
+.product-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--border)}
+.product-card-img{height:220px;overflow:hidden;position:relative;background:var(--bg-alt)}
+.product-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease}
+.product-card:hover .product-card-img img{transform:scale(1.05)}
+.product-type-badge{position:absolute;top:12px;left:12px;padding:4px 12px;border-radius:50px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;background:#E0E7FF;color:#3730A3}
+.product-card-body{padding:16px}
+.product-card-body h3{font-size:16px;margin-bottom:6px}
+.price-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.price-range{font-weight:700;color:var(--primary)}
+.cart-table{width:100%;border-collapse:collapse}
+.cart-table th{text-align:left;padding:12px 16px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);border-bottom:2px solid var(--border)}
+.cart-table td{padding:16px;border-bottom:1px solid var(--border-light);vertical-align:middle}
+.cart-item-info{display:flex;align-items:center;gap:14px}
+.cart-item-img{width:64px;height:64px;border-radius:var(--radius-sm);object-fit:cover;background:var(--bg-alt)}
+.qty-control{display:flex;align-items:center;gap:8px}
+.qty-control button{width:28px;height:28px;border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.qty-control button:hover{border-color:var(--primary)}
+.cart-summary{display:flex;justify-content:flex-end;margin-top:20px}
+.cart-summary-box{width:280px;background:var(--bg-alt);border-radius:var(--radius);padding:20px}
+.cart-summary-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px}
+.cart-summary-row.total{font-weight:700;font-size:18px;margin-top:12px;border-top:1px solid var(--border);padding-top:12px}
+.empty-cart{text-align:center;padding:60px 20px;color:var(--text-secondary)}
+.thankyou-wrap{max-width:480px;margin:60px auto;text-align:center;padding:0 20px}
+.thankyou-check{width:88px;height:88px;margin:0 auto 24px}
+.thankyou-check circle{stroke:var(--primary);stroke-width:3;fill:none;stroke-dasharray:220;stroke-dashoffset:220;animation:drawCircle 0.6s ease forwards}
+.thankyou-check path{stroke:var(--accent);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:drawCheck 0.4s ease forwards 0.55s}
+@keyframes drawCircle{to{stroke-dashoffset:0}}
+@keyframes drawCheck{to{stroke-dashoffset:0}}
+.thankyou-title{font-size:32px;font-weight:800;color:var(--primary);opacity:0;animation:fadeInUp 0.5s ease forwards 0.85s}
+.thankyou-sub{color:var(--text-secondary);margin-top:6px;opacity:0;animation:fadeInUp 0.5s ease forwards 1s}
+.thankyou-card{text-align:left;background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius);padding:20px;margin-top:26px;opacity:0;animation:fadeInUp 0.5s ease forwards 1.15s}
+.thankyou-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light);font-size:14px}
+.thankyou-row:last-child{border-bottom:none}
+.thankyou-code{font-weight:800;letter-spacing:4px;font-size:18px;color:var(--primary)}
+.payflow{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:var(--radius-sm);margin-top:2px}
+.payflow-icon{width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:50%;position:relative;overflow:hidden}
+.payflow-label{font-size:13px;font-weight:700;letter-spacing:0.3px}
+.payflow-sub{font-size:11.5px;color:var(--text-secondary);margin-top:1px}
+.payflow.pf-awaiting{background:var(--warning-bg)}
+.payflow.pf-claimed{background:var(--info-bg)}
+.payflow.pf-confirmed{background:var(--success-bg)}
+.payflow.pf-awaiting .payflow-icon{background:rgba(217,119,6,0.15);color:var(--warning)}
+.payflow.pf-claimed .payflow-icon{background:rgba(37,99,235,0.15);color:var(--info)}
+.payflow.pf-confirmed .payflow-icon{background:rgba(5,150,105,0.15);color:var(--success)}
+.payflow.pf-awaiting .payflow-label{color:var(--warning)}
+.payflow.pf-claimed .payflow-label{color:var(--info)}
+.payflow.pf-confirmed .payflow-label{color:var(--success)}
+@keyframes waitPulse{0%,100%{opacity:0.4;transform:scale(0.9)}50%{opacity:1;transform:scale(1)}}
+.pf-awaiting .payflow-icon i{animation:waitPulse 1.8s ease-in-out infinite}
+@keyframes sendFly{0%{transform:translate(-14px,6px) scale(0.7);opacity:0}25%{opacity:1}75%{opacity:1}100%{transform:translate(14px,-6px) scale(1);opacity:0}}
+.pf-claimed .payflow-icon i{position:absolute;animation:sendFly 1.4s ease-in-out infinite}
+@keyframes receivePop{0%{transform:scale(0.3) rotate(-15deg);opacity:0}55%{transform:scale(1.25) rotate(6deg);opacity:1}100%{transform:scale(1) rotate(0deg);opacity:1}}
+.pf-confirmed .payflow-icon i{animation:receivePop 0.55s cubic-bezier(0.34,1.56,0.64,1) both}
+@keyframes coinDrop{0%{transform:translateY(-16px) scale(0.6);opacity:0}60%{transform:translateY(2px) scale(1.1);opacity:1}100%{transform:translateY(0) scale(1);opacity:0}}
+.pf-confirmed .payflow-icon::after{content:'\\20b5';position:absolute;top:0;font-size:12px;font-weight:800;color:var(--success);animation:coinDrop 1.3s ease-in 0.5s infinite}
+.payflow-compact{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 6px;border-radius:50px;font-size:11.5px;font-weight:700}
+.payflow-compact .payflow-icon{width:20px;height:20px;font-size:10px}
+.payflow-compact.pf-confirmed{background:var(--success-bg);color:var(--success)}
+.payflow-compact.pf-claimed{background:var(--info-bg);color:var(--info)}
+.payflow-compact.pf-awaiting{background:var(--warning-bg);color:var(--warning)}
+.payflow-compact .payflow-icon::after{font-size:8px;top:-1px}
+.thankyou-actions{display:flex;gap:10px;justify-content:center;margin-top:26px;opacity:0;animation:fadeInUp 0.5s ease forwards 1.3s}
+.empty-cart i{font-size:40px;color:var(--text-muted);margin-bottom:14px}
+.admin-layout{display:flex;min-height:calc(100vh - 68px)}
+.admin-sidebar{width:250px;background:var(--primary-dark);color:#fff;padding:24px 0;flex-shrink:0;display:flex;flex-direction:column}
+.admin-sidebar-header{padding:0 20px 24px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.admin-sidebar-logo{width:36px;height:36px;flex-shrink:0}
+.admin-nav-group{margin-bottom:6px}
+.admin-nav-group-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.32);padding:14px 20px 6px}
+.admin-sidebar-header h3{font-size:16px;font-weight:700}
+.admin-sidebar-header p{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px}
+.admin-nav{display:flex;flex-direction:column}
+.admin-nav a{display:flex;align-items:center;gap:12px;padding:11px 20px;font-size:14px;color:rgba(255,255,255,0.6);transition:var(--transition);border-left:3px solid transparent}
+.admin-nav a:hover{color:#fff;background:rgba(255,255,255,0.05)}
+.admin-nav a.active{color:#fff;background:rgba(255,255,255,0.08);border-left-color:var(--accent)}
+.admin-nav a i{width:20px;text-align:center}
+.admin-nav .nav-divider{height:1px;background:rgba(255,255,255,0.06);margin:12px 20px}
+.admin-nav .nav-logout{color:rgba(255,255,255,0.4)}
+.admin-nav .nav-logout:hover{color:var(--danger);background:rgba(220,38,38,0.08)}
+.admin-main{flex:1;padding:32px;overflow-y:auto;background:var(--bg)}
+.admin-page-title{font-size:24px;font-weight:800;margin-bottom:24px}
+.admin-table-wrap{background:var(--card);border-radius:var(--radius);border:1px solid var(--border-light);overflow-x:auto;margin-top:24px}
+.admin-table{width:100%;border-collapse:collapse;min-width:600px}
+.admin-table th{text-align:left;padding:12px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);background:var(--bg-alt);border-bottom:1px solid var(--border)}
+.admin-table td{padding:14px 16px;border-bottom:1px solid var(--border-light);font-size:14px}
+.admin-product-card{display:flex;gap:16px;align-items:center}
+.admin-product-card img{width:56px;height:56px;border-radius:var(--radius-sm);object-fit:cover;background:var(--bg-alt)}
+.admin-product-card .apc-info h4{font-size:14px;font-weight:600}
+.admin-product-card .apc-info p{font-size:12px;color:var(--text-secondary)}
+.settings-card{background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius);padding:24px;margin-bottom:24px}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text-secondary)}
+.form-control{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;transition:var(--transition);background:var(--card)}
+.form-control:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(27,67,50,0.08)}
+.login-card{max-width:400px;margin:80px auto;background:var(--card);border-radius:var(--radius-lg);padding:40px;box-shadow:var(--shadow-lg);border:1px solid var(--border-light);text-align:center}
+.login-card .lock-icon{width:60px;height:60px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.footer{background:var(--primary-dark);color:rgba(255,255,255,0.6);padding:48px 24px 24px;margin-top:60px}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:40px}
+.footer h4{color:#fff;font-size:16px;margin-bottom:16px}
+/* image manager */
+.img-manager{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.img-thumb{position:relative;width:80px;height:80px;border-radius:var(--radius-sm);overflow:hidden;border:1.5px solid var(--border)}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
+.img-thumb .img-remove{position:absolute;top:2px;right:2px;width:20px;height:20px;background:rgba(0,0,0,0.6);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px}
+.img-thumb .img-remove:hover{background:var(--danger)}
+.img-add-row{display:flex;gap:8px}
+.img-add-row input{flex:1}
+.product-gallery{position:relative}
+.gallery-dots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:5px}
+.gallery-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.6)}
+.gallery-dots span.active{background:#fff}
+.gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);width:26px;height:26px;background:rgba(255,255,255,0.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text)}
+.gallery-arrow.left{left:8px}
+.gallery-arrow.right{right:8px}
+@media(max-width:1024px){.admin-layout{flex-direction:column}.admin-sidebar{width:100%}}
+</style>
+</head>
+<body>
+<div id="toast-container"></div>
+<div id="modal-overlay"></div>
+<div id="app"></div>
+<script>
+var LOGO_SVG = '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="31" fill="var(--primary)"/><text x="32" y="43" font-family="Playfair Display, Georgia, serif" font-weight="800" font-size="34" fill="var(--accent-light)" text-anchor="middle">S</text></svg>';
+
+function genId(){return 'id_'+Date.now().toString(36)+Math.random().toString(36).substr(2,6)}
+function genTrackingId(){return 'KDB-'+Date.now().toString(36).toUpperCase()+Math.random().toString(36).substr(2,4).toUpperCase()}
+function genVerificationCode(){
+  var code = '';
+  for(var i=0;i<5;i++){ code += Math.floor(Math.random()*10); }
+  return code;
+}
+function formatPrice(n){return state.currency+Number(n).toLocaleString()}
+function paymentFlowHtml(paymentStatus){
+  var ps = paymentStatus || 'awaiting';
+  if(ps==='confirmed'){
+    return '<div class="payflow pf-confirmed"><div class="payflow-icon"><i class="fas fa-circle-check"></i></div><div><div class="payflow-label">Payment Received</div><div class="payflow-sub">Confirmed by slice.snacks</div></div></div>';
+  } else if(ps==='claimed'){
+    return '<div class="payflow pf-claimed"><div class="payflow-icon"><i class="fas fa-money-bill-transfer"></i></div><div><div class="payflow-label">Payment Sent</div><div class="payflow-sub">Awaiting confirmation</div></div></div>';
+  } else {
+    return '<div class="payflow pf-awaiting"><div class="payflow-icon"><i class="fas fa-wallet"></i></div><div><div class="payflow-label">Awaiting Payment</div><div class="payflow-sub">Send payment to confirm order</div></div></div>';
+  }
+}
+function paymentFlowCompactHtml(paymentStatus){
+  var ps = paymentStatus || 'awaiting';
+  if(ps==='confirmed'){
+    return '<span class="payflow-compact pf-confirmed"><span class="payflow-icon"><i class="fas fa-circle-check"></i></span>Received</span>';
+  } else if(ps==='claimed'){
+    return '<span class="payflow-compact pf-claimed"><span class="payflow-icon"><i class="fas fa-money-bill-transfer"></i></span>Sent</span>';
+  } else {
+    return '<span class="payflow-compact pf-awaiting"><span class="payflow-icon"><i class="fas fa-wallet"></i></span>Awaiting</span>';
+  }
+}
+function escHtml(s){if(!s)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function safeImg(url){
+  if(url && (/^https?:\/\//.test(url) || /^data:image\//.test(url))) return url;
+  return 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 600 400\'%3E%3Crect width=\'600\' height=\'400\' fill=\'%23F5EFE6\'/%3E%3Ctext x=\'300\' y=\'210\' font-family=\'sans-serif\' font-size=\'22\' fill=\'%239CA3AF\' text-anchor=\'middle\'%3ENo photo yet%3C/text%3E%3C/svg%3E';
+}
+
+var heroCtaIndex = 0;
+var heroCtaTimer = null;
+function startHeroCtaCycle(){
+  if(heroCtaTimer) clearInterval(heroCtaTimer);
+  heroCtaTimer = setInterval(function(){
+    heroCtaIndex = (heroCtaIndex + 1) % 2;
+    var slides = document.querySelectorAll('.hero-cta-slide');
+    slides.forEach(function(el, i){ el.classList.toggle('active', i===heroCtaIndex); });
+  }, 2200);
+}
+
+function getDefaultProducts(){
+  return [
+    {id:genId(),name:'Ripe Plantain Chips',type:'ripe',description:'Hand-picked ripe plantains, thinly sliced.',images:['https://picsum.photos/seed/ripechip1/600/400','https://picsum.photos/seed/ripechip1b/600/400'],sizes:[{label:'500ml',price:900}],inStock:true,featured:true},
+    {id:genId(),name:'Crispy Unripe Plantain Chips',type:'unripe',description:'Soft unripe plantains sliced thin.',images:['https://picsum.photos/seed/unripechip2/600/400'],sizes:[{label:'500ml',price:800}],inStock:true,featured:true}
+  ];
+}
+
+// in-memory only — localStorage is not available in this environment
+var state = {
+  storeName:'slice.snacks',
+  storeDescription:'Slice Snacks plantain chips.',
+  contactPhone:'+233 0506213903 KADUBA',
+  contactEmail:'hello@kaduba.com',
+  address:'Accra, Ghana',
+  paymentNumber:'0506213903 (slice.snacks MoMo)',
+  pickupDays:['Monday','Wednesday','Friday'],
+  deliveryDays:['Tuesday','Thursday','Saturday'],
+  lastOrder:null,
+  adminPassword:'22306299',
+  currency:'GH\u20B5',
+  products:[],
+  sections:['ripe', 'unripe', 'sweet', 'soft'],
+  orders:[],
+  customerLogins:[], // {email, timestamp}
+  currentCustomerEmail:'',
+  currentCustomerName:'',
+  currentCustomerAddress:'',
+  currentCustomerDeliveryDay:'',
+  checkoutFulfillment:'pickup', // 'pickup' | 'delivery'
+  cart:[], // {productId, qty}
+  adminAuth:false,
+  adminSection:'products',
+  route:'home',
+  trackEmailInput:'',
+  galleryIndex:{} // productId -> current image index for client gallery
+};
+
+
+
+var CONFIG_KEY = 'kaduba-config';   // admin-owned: store settings, catalog, password — customers never write this
+var ORDERS_KEY = 'kaduba-orders';   // shared: orders + login log — customers and admin both append to this
+var storageAvailable = (typeof window !== 'undefined' && window.storage && typeof window.storage.get === 'function');
+var isSyncing = false;
+
+function snapshotConfig(){
+  return {
+    storeName: state.storeName,
+    storeDescription: state.storeDescription,
+    contactPhone: state.contactPhone,
+    contactEmail: state.contactEmail,
+    address: state.address,
+    paymentNumber: state.paymentNumber,
+    pickupDays: state.pickupDays,
+    deliveryDays: state.deliveryDays,
+    adminPassword: state.adminPassword,
+    currency: state.currency,
+    sections: state.sections,
+    products: state.products
+  };
+}
+
+function applyConfig(data){
+  if(!data) return;
+  state.storeName = data.storeName || state.storeName;
+  state.storeDescription = data.storeDescription || state.storeDescription;
+  state.contactPhone = data.contactPhone || state.contactPhone;
+  state.contactEmail = data.contactEmail || state.contactEmail;
+  state.address = data.address || state.address;
+  state.paymentNumber = data.paymentNumber || state.paymentNumber;
+  state.pickupDays = data.pickupDays || state.pickupDays;
+  state.deliveryDays = data.deliveryDays || state.deliveryDays;
+  state.adminPassword = data.adminPassword || state.adminPassword;
+  state.currency = data.currency || state.currency;
+  state.sections = (data.sections && data.sections.length) ? data.sections : state.sections;
+  state.products = (data.products && data.products.length) ? data.products : state.products;
+}
+
+function applyOrders(data){
+  if(!data) return;
+  state.orders = data.orders || [];
+  state.customerLogins = data.customerLogins || [];
+}
+
+function mergeById(remote, local){
+  remote = remote || [];
+  local = local || [];
+  var map = {};
+  remote.forEach(function(item){ map[item.id] = item; });
+  local.forEach(function(item){ map[item.id] = item; }); // local edits win for anything we touched
+  return Object.keys(map).map(function(id){ return map[id]; });
+}
+
+function mergeLogins(remote, local){
+  remote = remote || [];
+  local = local || [];
+  var seen = {};
+  var combined = remote.concat(local);
+  var out = [];
+  combined.forEach(function(l){
+    var key = l.email + '|' + l.timestamp;
+    if(!seen[key]){ seen[key] = true; out.push(l); }
+  });
+  return out;
+}
+
+// Config (settings, catalog, password) is only ever written by admin actions, so it's
+// safe to overwrite outright — no customer action is allowed to touch this key.
+async function persistConfig(){
+  if(!storageAvailable) return;
+  try{
+    await window.storage.set(CONFIG_KEY, JSON.stringify(snapshotConfig()), true);
+  }catch(e){
+    console.error('Could not save config to backend storage', e);
+  }
+}
+
+// Orders/logins can be written by many customers at once, so we merge with whatever
+// is currently stored instead of blindly overwriting it — nobody's order gets lost.
+async function persistOrders(){
+  if(!storageAvailable) return;
+  try{
+    var latest = null;
+    try{
+      var result = await window.storage.get(ORDERS_KEY, true);
+      if(result && result.value) latest = JSON.parse(result.value);
+    }catch(e){ /* key doesn't exist yet */ }
+    var mergedOrders = mergeById(latest ? latest.orders : [], state.orders);
+    var mergedLogins = mergeLogins(latest ? latest.customerLogins : [], state.customerLogins);
+    state.orders = mergedOrders;
+    state.customerLogins = mergedLogins;
+    await window.storage.set(ORDERS_KEY, JSON.stringify({orders: mergedOrders, customerLogins: mergedLogins}), true);
+  }catch(e){
+    console.error('Could not save orders to backend storage', e);
+  }
+}
+
+// Pulls the latest shared data down from storage (used on startup and on manual refresh,
+// so changes made by the admin or other customers show up). Read-only — never writes.
+async function loadState(){
+  state.products = getDefaultProducts();
+  if(!storageAvailable) return;
+  var seedConfig = false, seedOrders = false;
+  try{
+    var configResult = await window.storage.get(CONFIG_KEY, true);
+    if(configResult && configResult.value){
+      applyConfig(JSON.parse(configResult.value));
+    } else {
+      seedConfig = true;
+    }
+  }catch(e){
+    seedConfig = true; // key doesn't exist yet on the backend
+  }
+  try{
+    var ordersResult = await window.storage.get(ORDERS_KEY, true);
+    if(ordersResult && ordersResult.value){
+      applyOrders(JSON.parse(ordersResult.value));
+    } else {
+      seedOrders = true;
+    }
+  }catch(e){
+    seedOrders = true;
+  }
+  // First run ever on this artifact: seed both keys with the defaults so future reads/writes have something to merge against.
+  if(seedConfig) { try{ await persistConfig(); }catch(e2){ console.error('Could not seed config storage', e2); } }
+  if(seedOrders) { try{ await persistOrders(); }catch(e2){ console.error('Could not seed orders storage', e2); } }
+}
+
+async function refreshFromBackend(){
+  if(!storageAvailable){
+    showToast('Backend storage isn\'t available in this environment', 'warning');
+    return;
+  }
+  if(isSyncing) return;
+  isSyncing = true;
+  try{
+    var configResult = await window.storage.get(CONFIG_KEY, true);
+    if(configResult && configResult.value) applyConfig(JSON.parse(configResult.value));
+    var ordersResult = await window.storage.get(ORDERS_KEY, true);
+    if(ordersResult && ordersResult.value) applyOrders(JSON.parse(ordersResult.value));
+    showToast('Latest data loaded', 'success');
+  }catch(e){
+    console.error('Could not refresh from backend storage', e);
+  } finally {
+    isSyncing = false;
+    renderApp();
+  }
+}
+
+function showToast(msg, type){
+  type = type || 'success';
+  var c = document.getElementById('toast-container');
+  var t = document.createElement('div');
+  t.className = 'toast toast-' + type;
+  t.innerHTML = '<span>' + escHtml(msg) + '</span>';
+  c.appendChild(t);
+  requestAnimationFrame(function(){t.classList.add('show')});
+  setTimeout(function(){t.classList.remove('show');setTimeout(function(){t.remove()},350)},3500);
+}
+
+function showModal(title, bodyHtml, footerHtml){
+  var o = document.getElementById('modal-overlay');
+  o.innerHTML = '<div class="modal-box"><div class="modal-header"><h3>' + escHtml(title) + '</h3><button class="modal-close" onclick="hideModal()"><i class="fas fa-times"></i></button></div><div class="modal-body">' + bodyHtml + '</div>' + (footerHtml ? '<div class="modal-footer">' + footerHtml + '</div>' : '') + '</div>';
+  o.classList.add('active');
+}
+function hideModal(){document.getElementById('modal-overlay').classList.remove('active')}
+
+/* ---------- CART LOGIC ---------- */
+function cartCount(){
+  return state.cart.reduce(function(sum,i){return sum + i.qty;}, 0);
+}
+function cartTotal(){
+  return state.cart.reduce(function(sum,item){
+    var p = state.products.find(function(pr){return pr.id===item.productId;});
+    if(!p) return sum;
+    return sum + (p.sizes[0].price * item.qty);
+  }, 0);
+}
+function addToCart(productId){
+  var existing = state.cart.find(function(i){return i.productId===productId;});
+  if(existing){ existing.qty += 1; }
+  else{ state.cart.push({productId:productId, qty:1}); }
+  showToast('Added to cart!');
+  renderApp();
+}
+function removeFromCart(productId){
+  state.cart = state.cart.filter(function(i){return i.productId!==productId;});
+  showToast('Removed from cart', 'info');
+  renderApp();
+}
+function changeCartQty(productId, delta){
+  var item = state.cart.find(function(i){return i.productId===productId;});
+  if(!item) return;
+  item.qty += delta;
+  if(item.qty <= 0){
+    removeFromCart(productId);
+    return;
+  }
+  renderApp();
+}
+function setFulfillmentType(type){
+  // preserve whatever the customer already typed before we re-render
+  var nameInput = document.getElementById('checkout-name');
+  var emailInput = document.getElementById('checkout-email');
+  var addressInput = document.getElementById('checkout-address');
+  var deliveryDayInput = document.getElementById('checkout-delivery-day');
+  if(nameInput) state.currentCustomerName = nameInput.value;
+  if(emailInput) state.currentCustomerEmail = emailInput.value;
+  if(addressInput) state.currentCustomerAddress = addressInput.value;
+  if(deliveryDayInput) state.currentCustomerDeliveryDay = deliveryDayInput.value;
+  state.checkoutFulfillment = type;
+  renderApp();
+}
+function checkout(){
+  if(state.cart.length===0) return;
+  var nameInput = document.getElementById('checkout-name');
+  var name = nameInput ? nameInput.value.trim() : '';
+  if(!name){
+    showToast('Enter your name to place your order', 'error');
+    return;
+  }
+  var emailInput = document.getElementById('checkout-email');
+  var email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+  if(!email || email.indexOf('@')===-1){
+    showToast('Enter a valid email to place your order', 'error');
+    return;
+  }
+  var fulfillment = state.checkoutFulfillment === 'delivery' ? 'delivery' : 'pickup';
+  var pickupDay = '';
+  var address = '';
+  var deliveryDay = '';
+  if(fulfillment === 'pickup'){
+    var pickupInput = document.getElementById('checkout-pickup-day');
+    pickupDay = pickupInput ? pickupInput.value : '';
+    if(!pickupDay){
+      showToast('Choose a pickup day to place your order', 'error');
+      return;
+    }
+  } else {
+    var addressInput = document.getElementById('checkout-address');
+    address = addressInput ? addressInput.value.trim() : '';
+    if(!address){
+      showToast('Enter your delivery location to place your order', 'error');
+      return;
+    }
+    var deliveryDayInput = document.getElementById('checkout-delivery-day');
+    deliveryDay = deliveryDayInput ? deliveryDayInput.value : '';
+    if(!deliveryDay){
+      showToast('Choose a delivery day to place your order', 'error');
+      return;
+    }
+  }
+  logCustomerLogin(email);
+  state.currentCustomerEmail = email;
+  state.currentCustomerName = name;
+  state.currentCustomerAddress = address;
+  state.currentCustomerDeliveryDay = deliveryDay;
+  var tracking = genTrackingId();
+  var verificationCode = genVerificationCode();
+  var newOrder = {
+    id: genId(),
+    tracking: tracking,
+    verificationCode: verificationCode,
+    name: name,
+    email: email,
+    fulfillment: fulfillment, // 'pickup' | 'delivery'
+    pickupDay: pickupDay,
+    address: address,
+    deliveryDay: deliveryDay,
+    items: state.cart.slice(),
+    total: cartTotal(),
+    status: 'pending', // pending | delivered
+    paymentStatus: 'awaiting', // awaiting | claimed | confirmed
+    date: new Date().toISOString()
+  };
+  state.orders.push(newOrder);
+  state.lastOrder = newOrder;
+  state.cart = [];
+  state.route = 'thankyou';
+  persistOrders();
+  renderApp();
+}
+
+/* ---------- CUSTOMER LOGIN TRACKING & ORDER STATUS ---------- */
+function logCustomerLogin(email){
+  state.customerLogins.push({email: email, timestamp: new Date().toISOString()});
+}
+function loginCountForEmail(email){
+  return state.customerLogins.filter(function(l){return l.email===email;}).length;
+}
+function ordersForEmail(email){
+  return state.orders.filter(function(o){return o.email===email;});
+}
+function toggleOrderStatus(orderId){
+  var o = state.orders.find(function(ord){return ord.id===orderId;});
+  if(!o) return;
+  o.status = o.status==='pending' ? 'delivered' : 'pending';
+  showToast('Order marked as ' + o.status, 'success');
+  persistOrders();
+  renderApp();
+}
+function markPaymentClaimed(orderId){
+  var o = state.orders.find(function(ord){return ord.id===orderId;});
+  if(!o) return;
+  o.paymentStatus = 'claimed';
+  if(state.lastOrder && state.lastOrder.id===orderId) state.lastOrder.paymentStatus = 'claimed';
+  showToast('Thanks! We\'ll confirm your payment shortly.', 'success');
+  persistOrders();
+  renderApp();
+}
+function confirmPayment(orderId){
+  var o = state.orders.find(function(ord){return ord.id===orderId;});
+  if(!o) return;
+  o.paymentStatus = 'confirmed';
+  showToast('Payment confirmed', 'success');
+  persistOrders();
+  renderApp();
+}
+function revertPayment(orderId){
+  var o = state.orders.find(function(ord){return ord.id===orderId;});
+  if(!o) return;
+  o.paymentStatus = 'awaiting';
+  showToast('Payment status reset', 'info');
+  persistOrders();
+  renderApp();
+}
+function trackOrders(){
+  var input = document.getElementById('track-email-input');
+  var email = input ? input.value.trim().toLowerCase() : '';
+  if(!email || email.indexOf('@')===-1){
+    showToast('Enter a valid email', 'error');
+    return;
+  }
+  logCustomerLogin(email);
+  state.trackEmailInput = email;
+  persistOrders();
+  renderApp();
+}
+
+/* ---------- IMAGE MANAGER (admin add/edit forms) ---------- */
+var formImages = []; // working array of base64 data URIs used by both add & edit forms while modal/form open
+
+function renderImgManager(){
+  var thumbs = formImages.map(function(url, idx){
+    return '<div class="img-thumb"><img src="' + url + '"><div class="img-remove" onclick="removeFormImage(' + idx + ')"><i class="fas fa-times"></i></div></div>';
+  }).join('');
+  return '<div id="img-manager-thumbs" class="img-manager">' + thumbs + '</div><div class="img-add-row"><label class="btn btn-outline btn-sm" style="cursor:pointer"><i class="fas fa-upload"></i> Upload Photo<input type="file" accept="image/*" multiple style="display:none" onchange="handleImageUpload(event)"></label></div>';
+}
+function handleImageUpload(event){
+  var files = Array.prototype.slice.call(event.target.files || []);
+  if(!files.length) return;
+  var remaining = files.length;
+  files.forEach(function(file){
+    var reader = new FileReader();
+    reader.onload = function(e){
+      formImages.push(e.target.result);
+      remaining--;
+      if(remaining === 0) refreshImgManager();
+    };
+    reader.onerror = function(){
+      showToast('Could not read one of the images', 'error');
+      remaining--;
+      if(remaining === 0) refreshImgManager();
+    };
+    reader.readAsDataURL(file);
+  });
+  event.target.value = '';
+}
+function removeFormImage(idx){
+  formImages.splice(idx, 1);
+  refreshImgManager();
+}
+function refreshImgManager(){
+  var el = document.getElementById('img-manager-thumbs');
+  var wrap = el.parentElement;
+  wrap.outerHTML = renderImgManager();
+}
+
+/* ---------- PRODUCT GALLERY (client-facing) ---------- */
+function galleryNav(productId, dir, ev){
+  if(ev) ev.stopPropagation();
+  var p = state.products.find(function(pr){return pr.id===productId;});
+  if(!p || !p.images || p.images.length<2) return;
+  var cur = state.galleryIndex[productId] || 0;
+  cur = (cur + dir + p.images.length) % p.images.length;
+  state.galleryIndex[productId] = cur;
+  renderApp();
+}
+
+function renderApp(){
+  var app = document.getElementById('app');
+
+  var nav = '<nav class="nav"><div class="nav-inner"><div class="nav-logo" onclick="state.route=\'home\';renderApp()"><div class="logo-mark">' + LOGO_SVG + '</div>' + escHtml(state.storeName) + '<span>.</span></div><div class="nav-links"><a href="#" onclick="state.route=\'home\';renderApp();return false;" class="' + (state.route==='home'?'active':'') + '">Home</a><a href="#" onclick="state.route=\'track\';renderApp();return false;" class="' + (state.route==='track'?'active':'') + '">Track Order</a><a href="#" class="nav-cart" onclick="state.route=\'cart\';renderApp();return false;"><i class="fas fa-cart-shopping"></i>' + (cartCount()>0 ? '<span class="nav-cart-badge">' + cartCount() + '</span>' : '') + '</a><a href="#" title="" onclick="state.route=\'admin\';renderApp();return false;" class="nav-admin-btn">' + LOGO_SVG + '</a></div></div></nav>';
+
+  if(state.route === 'thankyou'){
+    var o = state.lastOrder;
+    if(!o){
+      state.route = 'home';
+      renderApp();
+      return;
+    }
+    var payButton = o.paymentStatus==='awaiting'
+      ? '<button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px" onclick="markPaymentClaimed(\'' + o.id + '\')"><i class="fas fa-paper-plane"></i> I\'ve Paid</button>'
+      : '';
+    var fulfillmentRow = o.fulfillment === 'delivery'
+      ? '<div class="thankyou-row"><span>Delivery Day</span><strong>' + escHtml(o.deliveryDay||'—') + '</strong></div><div class="thankyou-row"><span>Delivery Location</span><strong>' + escHtml(o.address||'—') + '</strong></div>'
+      : '<div class="thankyou-row"><span>Pickup Day</span><strong>' + escHtml(o.pickupDay||'—') + '</strong></div>';
+    var body = '<div class="thankyou-wrap"><svg class="thankyou-check" viewBox="0 0 80 80"><circle cx="40" cy="40" r="35"/><path d="M24 42l11 11 21-23"/></svg><h2 class="thankyou-title">Thank You!</h2><p class="thankyou-sub">Your order has been received.</p><div class="thankyou-card"><div class="thankyou-row"><span>Name</span><strong>' + escHtml(o.name||'—') + '</strong></div><div class="thankyou-row"><span>Tracking ID</span><strong>' + escHtml(o.tracking) + '</strong></div><div class="thankyou-row"><span>Verification Code</span><span class="thankyou-code">' + escHtml(o.verificationCode) + '</span></div><div class="thankyou-row"><span>Order Type</span><strong>' + (o.fulfillment === 'delivery' ? 'Delivery' : 'Pickup') + '</strong></div>' + fulfillmentRow + '<div class="thankyou-row"><span>Total</span><strong>' + formatPrice(o.total) + '</strong></div><div class="thankyou-row"><span>Pay To</span><strong>' + escHtml(state.paymentNumber) + '</strong></div></div>' + paymentFlowHtml(o.paymentStatus) + payButton + '<p style="margin-top:16px;color:var(--text-secondary);font-size:12.5px;">Save your verification code — it confirms your order at pickup or delivery. Email delivery isn\'t connected yet, so keep this page or check Track Order.</p><div class="thankyou-actions"><button class="btn btn-outline" onclick="state.route=\'track\';renderApp();">Track My Orders</button><button class="btn btn-dark" onclick="state.route=\'home\';renderApp();">Continue Shopping</button></div></div>';
+    app.innerHTML = nav + body;
+    return;
+  }
+
+  if(state.route === 'cart'){
+    var body;
+    if(state.cart.length===0){
+      body = '<div class="empty-cart"><i class="fas fa-cart-shopping"></i><p>Your cart is empty.</p><button class="btn btn-dark" style="margin-top:16px" onclick="state.route=\'home\';renderApp();">Browse Products</button></div>';
+    } else {
+      var rows = state.cart.map(function(item){
+        var p = state.products.find(function(pr){return pr.id===item.productId;});
+        if(!p) return '';
+        var img = (p.images && p.images[0]) ? p.images[0] : '';
+        return '<tr><td><div class="cart-item-info"><img class="cart-item-img" src="' + escHtml(safeImg(img)) + '"><div><strong>' + escHtml(p.name) + '</strong><div style="font-size:12px;color:var(--text-secondary)">' + escHtml(p.sizes[0].label) + '</div></div></div></td><td>' + formatPrice(p.sizes[0].price) + '</td><td><div class="qty-control"><button onclick="changeCartQty(\'' + p.id + '\',-1)">-</button><span>' + item.qty + '</span><button onclick="changeCartQty(\'' + p.id + '\',1)">+</button></div></td><td>' + formatPrice(p.sizes[0].price * item.qty) + '</td><td><button class="btn btn-xs btn-outline" onclick="removeFromCart(\'' + p.id + '\')"><i class="fas fa-trash"></i></button></td></tr>';
+      }).join('');
+      var pickupOptions = state.pickupDays.length
+        ? state.pickupDays.map(function(d){return '<option value="'+d+'">'+d+'</option>';}).join('')
+        : '<option value="" disabled selected>No pickup days set yet</option>';
+      var deliveryOptions = state.deliveryDays.length
+        ? state.deliveryDays.map(function(d){return '<option value="'+d+'">'+d+'</option>';}).join('')
+        : '<option value="" disabled selected>No delivery days set yet</option>';
+      var fulfillment = state.checkoutFulfillment === 'delivery' ? 'delivery' : 'pickup';
+      var pickupActive = fulfillment === 'pickup';
+      var fulfillmentToggle = '<div class="form-group" style="margin-top:14px"><label>How would you like your order?</label><div style="display:flex;gap:10px"><button type="button" class="btn ' + (pickupActive ? 'btn-dark' : 'btn-outline') + '" style="flex:1;justify-content:center" onclick="setFulfillmentType(\'pickup\')"><i class="fas fa-store"></i> Pickup</button><button type="button" class="btn ' + (!pickupActive ? 'btn-dark' : 'btn-outline') + '" style="flex:1;justify-content:center" onclick="setFulfillmentType(\'delivery\')"><i class="fas fa-truck"></i> Delivery</button></div></div>';
+      var fulfillmentFields = pickupActive
+        ? '<div class="form-group" style="margin-top:14px"><label>Pickup Day</label><select id="checkout-pickup-day" class="form-control">' + pickupOptions + '</select></div>'
+        : '<div class="form-group" style="margin-top:14px"><label>Delivery Day</label><select id="checkout-delivery-day" class="form-control">' + deliveryOptions + '</select></div><div class="form-group"><label>Delivery Location</label><textarea id="checkout-address" class="form-control" rows="2" placeholder="Enter your address / area / landmark">' + escHtml(state.currentCustomerAddress||'') + '</textarea></div>';
+      body = '<table class="cart-table"><thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Subtotal</th><th></th></tr></thead><tbody>' + rows + '</tbody></table><div class="cart-summary"><div class="cart-summary-box"><div class="cart-summary-row total"><span>Total</span><span>' + formatPrice(cartTotal()) + '</span></div><div style="margin-top:14px;padding:12px;background:var(--primary-tint);border-radius:var(--radius-sm);font-size:13px"><i class="fas fa-mobile-screen-button" style="color:var(--primary)"></i> Pay to: <strong>' + escHtml(state.paymentNumber) + '</strong></div><div class="form-group" style="margin-top:14px"><label>Your Name</label><input type="text" id="checkout-name" class="form-control" placeholder="Full name" value="' + escHtml(state.currentCustomerName||'') + '"></div><div class="form-group"><label>Your Email (for order tracking)</label><input type="email" id="checkout-email" class="form-control" placeholder="you@example.com" value="' + escHtml(state.currentCustomerEmail) + '"></div>' + fulfillmentToggle + fulfillmentFields + '<button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:6px" onclick="checkout()">Checkout</button></div></div>';
+    }
+    app.innerHTML = nav + '<div class="section"><div class="section-header"><h2>Your Cart</h2></div>' + body + '</div>';
+    return;
+  }
+
+  if(state.route === 'track'){
+    var trackBody = '<div class="settings-card" style="max-width:480px;margin:0 auto 24px"><div class="form-group"><label>Enter your email to view your orders</label><input type="email" id="track-email-input" class="form-control" placeholder="you@example.com" value="' + escHtml(state.trackEmailInput) + '"></div><button class="btn btn-dark" style="width:100%;justify-content:center" onclick="trackOrders()">View My Orders</button></div>';
+
+    if(state.trackEmailInput){
+      var myOrders = ordersForEmail(state.trackEmailInput);
+      var loginCount = loginCountForEmail(state.trackEmailInput);
+      trackBody += '<div style="max-width:700px;margin:0 auto"><div class="cart-summary-row" style="justify-content:flex-start;gap:24px;margin-bottom:18px"><span><strong>' + myOrders.length + '</strong> order(s) placed</span><span><strong>' + loginCount + '</strong> time(s) checked in with this email</span></div>';
+
+      if(myOrders.length === 0){
+        trackBody += '<div class="empty-cart"><i class="fas fa-box-open"></i><p>No orders found for this email yet.</p></div>';
+      } else {
+        var orderRows = myOrders.map(function(o){
+          var badgeBg = o.status==='delivered' ? 'var(--success-bg)' : 'var(--warning-bg)';
+          var badgeColor = o.status==='delivered' ? 'var(--success)' : 'var(--warning)';
+          var payCell = paymentFlowCompactHtml(o.paymentStatus);
+          if((o.paymentStatus||'awaiting')==='awaiting'){
+            payCell += ' <button class="btn btn-xs btn-outline" style="margin-left:6px" onclick="markPaymentClaimed(\'' + o.id + '\')">I\'ve Paid</button>';
+          }
+          var fulfillmentCell = o.fulfillment === 'delivery'
+            ? '<span title="' + escHtml(o.address||'') + '"><i class="fas fa-truck"></i> ' + escHtml(o.deliveryDay||'Delivery') + ' &middot; ' + escHtml(o.address||'') + '</span>'
+            : '<span><i class="fas fa-store"></i> ' + escHtml(o.pickupDay||'Pickup') + '</span>';
+          return '<tr><td>' + escHtml(o.tracking) + '</td><td style="font-weight:700;letter-spacing:2px">' + escHtml(o.verificationCode||'—') + '</td><td>' + fulfillmentCell + '</td><td>' + new Date(o.date).toLocaleDateString() + '</td><td>' + formatPrice(o.total) + '</td><td><span style="padding:4px 12px;border-radius:50px;font-size:12px;font-weight:700;background:' + badgeBg + ';color:' + badgeColor + '">' + escHtml(o.status.toUpperCase()) + '</span></td><td>' + payCell + '</td></tr>';
+        }).join('');
+        trackBody += '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Tracking ID</th><th>Verification Code</th><th>Pickup / Delivery</th><th>Date</th><th>Total</th><th>Status</th><th>Payment</th></tr></thead><tbody>' + orderRows + '</tbody></table></div>';
+      }
+      trackBody += '</div>';
+    }
+
+    app.innerHTML = nav + '<div class="section"><div class="section-header"><h2>Track Your Order</h2><p>Enter the email you used at checkout to see your order history and delivery status.</p></div>' + trackBody + '</div>';
+    return;
+  }
+
+  if(state.route === 'admin'){
+    if(!state.adminAuth){
+      app.innerHTML = nav + '<div class="login-card"><div class="lock-icon">' + LOGO_SVG + '</div><h2>Pilot Access</h2><p>Enter your access code</p><div class="form-group"><input type="password" id="admin-pass" class="form-control" placeholder="Password"></div><button class="btn btn-dark w-100" onclick="loginAdmin()">Continue</button></div>';
+      return;
+    }
+
+    var navGroups = [
+      {label:'Catalog', items:[
+        {key:'products', icon:'fa-box', label:'Products'},
+        {key:'sections', icon:'fa-folder-plus', label:'Sections / Categories'}
+      ]},
+      {label:'Orders', items:[
+        {key:'orders', icon:'fa-receipt', label:'Orders'},
+        {key:'customers', icon:'fa-users', label:'Customers'},
+        {key:'pickup', icon:'fa-calendar-check', label:'Pickup Days'},
+        {key:'delivery', icon:'fa-truck', label:'Delivery Days'}
+      ]},
+      {label:'Settings', items:[
+        {key:'payment', icon:'fa-money-bill-wave', label:'Payment'},
+        {key:'security', icon:'fa-shield-halved', label:'Security / Password'}
+      ]}
+    ];
+    var navHtml = navGroups.map(function(group){
+      var itemsHtml = group.items.map(function(it){
+        return '<a href="#" class="' + (state.adminSection===it.key?'active':'') + '" onclick="state.adminSection=\'' + it.key + '\';formImages=[];renderApp();return false;"><i class="fas ' + it.icon + '"></i> ' + it.label + '</a>';
+      }).join('');
+      return '<div class="admin-nav-group"><div class="admin-nav-group-label">' + group.label + '</div>' + itemsHtml + '</div>';
+    }).join('');
+
+    var sidebar = '<div class="admin-sidebar"><div class="admin-sidebar-header"><div class="admin-sidebar-logo">' + LOGO_SVG + '</div><div><h3>Pilot</h3><p>' + escHtml(state.storeName) + ' Manager</p></div></div><div class="admin-nav">' + navHtml + '<div class="nav-divider"></div><a href="#" class="nav-logout" onclick="state.adminAuth=false;renderApp();return false;"><i class="fas fa-sign-out-alt"></i> Logout</a></div></div>';
+
+    var mainContent = '';
+    if(state.adminSection === 'products'){
+      var prodRows = state.products.map(function(p){
+        var thumb = (p.images && p.images[0]) ? p.images[0] : '';
+        return '<tr><td><div class="admin-product-card"><img src="' + escHtml(safeImg(thumb)) + '"><div><h4>' + escHtml(p.name) + '</h4><p>Section: ' + escHtml(p.type) + ' &middot; ' + (p.images ? p.images.length : 0) + ' photo(s)</p></div></div></td><td>' + formatPrice(p.sizes[0].price) + '</td><td><button class="btn btn-outline btn-xs" onclick="openEditProductModal(\'' + p.id + '\')"><i class="fas fa-edit"></i> Edit</button> <button class="btn btn-danger btn-xs" onclick="deleteProduct(\'' + p.id + '\')"><i class="fas fa-trash"></i></button></td></tr>';
+      }).join('');
+
+      var sectOptions = state.sections.length
+        ? state.sections.map(function(s){ return '<option value="'+escHtml(s)+'">'+escHtml(s.toUpperCase())+'</option>'; }).join('')
+        : '<option value="" disabled selected>No sections yet — add one first</option>';
+
+      mainContent = '<div class="admin-page-title">Manage Products</div><div class="settings-card"><h3 style="margin-bottom:14px">Add New Product</h3><div class="form-group"><label>Product Name</label><input type="text" id="new-p-name" class="form-control"></div><div class="form-group"><label>Photos</label>' + renderImgManager() + '</div><div class="form-group"><label>Section / Category</label><select id="new-p-type" class="form-control">' + sectOptions + '</select></div><div class="form-group"><label>Base Price</label><input type="number" id="new-p-price" class="form-control" value="1000"></div><button class="btn btn-dark" onclick="addNewProduct()">Save Product</button></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Product Info</th><th>Price</th><th>Action</th></tr></thead><tbody>' + prodRows + '</tbody></table></div>';
+    } else if(state.adminSection === 'sections') {
+      var sectItems = state.sections.map(function(s){
+        return '<div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:var(--bg-alt); margin-bottom:8px; border-radius:var(--radius-sm)"><strong>' + escHtml(s.toUpperCase()) + '</strong><button class="btn btn-xs btn-outline" onclick="removeSection(\'' + escHtml(s) + '\')"><i class="fas fa-trash"></i></button></div>';
+      }).join('');
+
+      mainContent = '<div class="admin-page-title">Manage Sections / Categories</div><div class="settings-card"><h3>Create New Section</h3><div class="form-group"><label>Section Code Name (e.g., soft, crunchy)</label><input type="text" id="new-section-name" class="form-control" placeholder="lowercase, no spaces"></div><button class="btn btn-dark" onclick="addNewSection()">Add Section</button></div><div class="settings-card"><h3>Existing Sections</h3>' + sectItems + '</div>';
+    } else if(state.adminSection === 'orders') {
+      var totalOrders = state.orders.length;
+      var pendingCount = state.orders.filter(function(o){return o.status==='pending';}).length;
+      var deliveredCount = state.orders.filter(function(o){return o.status==='delivered';}).length;
+      var awaitingPayCount = state.orders.filter(function(o){return (o.paymentStatus||'awaiting')==='awaiting';}).length;
+      var claimedPayCount = state.orders.filter(function(o){return o.paymentStatus==='claimed';}).length;
+
+      var orderRowsAdmin = state.orders.slice().reverse().map(function(o){
+        var badgeBg = o.status==='delivered' ? 'var(--success-bg)' : 'var(--warning-bg)';
+        var badgeColor = o.status==='delivered' ? 'var(--success)' : 'var(--warning)';
+        var ps = o.paymentStatus || 'awaiting';
+        var payActions = ps==='confirmed'
+          ? '<button class="btn btn-xs btn-outline" onclick="revertPayment(\'' + o.id + '\')">Reset</button>'
+          : '<button class="btn btn-xs btn-dark" onclick="confirmPayment(\'' + o.id + '\')">Confirm</button>';
+        var fulfillmentCellAdmin = o.fulfillment === 'delivery'
+          ? '<span title="' + escHtml(o.address||'') + '"><i class="fas fa-truck"></i> Delivery (' + escHtml(o.deliveryDay||'—') + '): ' + escHtml(o.address||'—') + '</span>'
+          : '<span><i class="fas fa-store"></i> Pickup: ' + escHtml(o.pickupDay||'—') + '</span>';
+        return '<tr><td>' + escHtml(o.tracking) + '</td><td>' + escHtml(o.name||'—') + '</td><td>' + escHtml(o.email) + '</td><td>' + fulfillmentCellAdmin + '</td><td>' + new Date(o.date).toLocaleDateString() + '</td><td>' + formatPrice(o.total) + '</td><td><span style="padding:4px 12px;border-radius:50px;font-size:12px;font-weight:700;background:' + badgeBg + ';color:' + badgeColor + '">' + escHtml(o.status.toUpperCase()) + '</span></td><td><button class="btn btn-xs btn-outline" onclick="toggleOrderStatus(\'' + o.id + '\')">Mark ' + (o.status==='pending' ? 'Delivered' : 'Pending') + '</button></td><td>' + paymentFlowCompactHtml(o.paymentStatus) + '</td><td>' + payActions + '</td></tr>';
+      }).join('');
+
+      mainContent = '<div class="admin-page-title" style="display:flex;align-items:center;justify-content:space-between">Orders<button class="btn btn-outline btn-sm" onclick="refreshFromBackend()"><i class="fas fa-rotate"></i> Refresh</button></div><div style="display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap"><div class="settings-card" style="flex:1;min-width:150px;text-align:center"><div style="font-size:26px;font-weight:800;color:var(--primary)">' + totalOrders + '</div><div style="font-size:12px;color:var(--text-secondary)">Total Orders</div></div><div class="settings-card" style="flex:1;min-width:150px;text-align:center"><div style="font-size:26px;font-weight:800;color:var(--warning)">' + pendingCount + '</div><div style="font-size:12px;color:var(--text-secondary)">Pending</div></div><div class="settings-card" style="flex:1;min-width:150px;text-align:center"><div style="font-size:26px;font-weight:800;color:var(--success)">' + deliveredCount + '</div><div style="font-size:12px;color:var(--text-secondary)">Delivered</div></div><div class="settings-card" style="flex:1;min-width:150px;text-align:center"><div style="font-size:26px;font-weight:800;color:var(--warning)">' + awaitingPayCount + '</div><div style="font-size:12px;color:var(--text-secondary)">Awaiting Payment</div></div><div class="settings-card" style="flex:1;min-width:150px;text-align:center"><div style="font-size:26px;font-weight:800;color:var(--info)">' + claimedPayCount + '</div><div style="font-size:12px;color:var(--text-secondary)">Needs Confirmation</div></div></div>' + (totalOrders===0 ? '<div class="empty-cart"><i class="fas fa-receipt"></i><p>No orders yet.</p></div>' : '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Tracking ID</th><th>Name</th><th>Customer Email</th><th>Pickup / Delivery</th><th>Date</th><th>Total</th><th>Status</th><th>Action</th><th>Payment</th><th>Payment Action</th></tr></thead><tbody>' + orderRowsAdmin + '</tbody></table></div>');
+    } else if(state.adminSection === 'customers') {
+      var emailCounts = {};
+      state.customerLogins.forEach(function(l){
+        emailCounts[l.email] = (emailCounts[l.email]||0) + 1;
+      });
+      var emails = Object.keys(emailCounts);
+      var custRows = emails.map(function(email){
+        var orderCount = ordersForEmail(email).length;
+        return '<tr><td>' + escHtml(email) + '</td><td>' + emailCounts[email] + '</td><td>' + orderCount + '</td></tr>';
+      }).join('');
+
+      mainContent = '<div class="admin-page-title">Customers</div><div class="settings-card" style="margin-bottom:24px"><p style="font-size:13px;color:var(--text-secondary)">A "login" is counted whenever a customer enters their email at checkout or on the Track Order page.</p></div>' + (emails.length===0 ? '<div class="empty-cart"><i class="fas fa-users"></i><p>No customer activity yet.</p></div>' : '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Email</th><th>Times Logged In</th><th>Orders Made</th></tr></thead><tbody>' + custRows + '</tbody></table></div>');
+    } else if(state.adminSection === 'payment') {
+      mainContent = '<div class="admin-page-title">Payment Details</div><div class="settings-card" style="max-width:480px"><p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">This number is shown to customers at checkout so they know where to send payment. Update it any time the number changes.</p><div class="form-group"><label>Payment Number / MoMo Details</label><input type="text" id="payment-number-input" class="form-control" value="' + escHtml(state.paymentNumber) + '"></div><button class="btn btn-dark" onclick="savePaymentNumber()">Save Payment Number</button></div>';
+    } else if(state.adminSection === 'pickup') {
+      var allDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+      var dayChecks = allDays.map(function(d){
+        var checked = state.pickupDays.indexOf(d) !== -1;
+        return '<label style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-alt);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer"><input type="checkbox" value="' + d + '" ' + (checked?'checked':'') + ' onchange="togglePickupDay(\'' + d + '\')"> ' + d + '</label>';
+      }).join('');
+      mainContent = '<div class="admin-page-title">Pickup Days</div><div class="settings-card" style="max-width:480px"><p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">Check the days customers can choose to pick up their order. These appear as options at checkout.</p>' + dayChecks + '</div>';
+    } else if(state.adminSection === 'delivery') {
+      var allDaysD = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+      var dayChecksD = allDaysD.map(function(d){
+        var checked = state.deliveryDays.indexOf(d) !== -1;
+        return '<label style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-alt);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer"><input type="checkbox" value="' + d + '" ' + (checked?'checked':'') + ' onchange="toggleDeliveryDay(\'' + d + '\')"> ' + d + '</label>';
+      }).join('');
+      mainContent = '<div class="admin-page-title">Delivery Days</div><div class="settings-card" style="max-width:480px"><p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">Check the days customers can choose to have their order delivered. These appear as options at checkout when Delivery is selected.</p>' + dayChecksD + '</div>';
+    } else if(state.adminSection === 'security') {
+      mainContent = '<div class="admin-page-title">Security / Password</div><div class="settings-card" style="max-width:420px"><p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">Change the password used to access Pilot.</p><div class="form-group"><label>Current Password</label><input type="password" id="current-pass-input" class="form-control"></div><div class="form-group"><label>New Password</label><input type="password" id="new-pass-input" class="form-control"></div><div class="form-group"><label>Confirm New Password</label><input type="password" id="confirm-pass-input" class="form-control"></div><button class="btn btn-dark" onclick="changeAdminPassword()">Update Password</button></div>';
+    }
+
+    app.innerHTML = nav + '<div class="admin-layout">' + sidebar + '<div class="admin-main">' + mainContent + '</div></div>';
+  } else {
+    // Client Home View
+    var sectionsHtml = state.sections.map(function(sect){
+      var filtered = state.products.filter(function(p){ return p.type === sect; });
+      if(filtered.length === 0) return '';
+
+      var cards = filtered.map(function(p, ci){
+        var imgs = (p.images && p.images.length) ? p.images : ['https://picsum.photos/600/400'];
+        var idx = state.galleryIndex[p.id] || 0;
+        if(idx >= imgs.length) idx = 0;
+        var arrows = imgs.length > 1
+          ? '<div class="gallery-arrow left" onclick="galleryNav(\'' + p.id + '\',-1,event)"><i class="fas fa-chevron-left"></i></div><div class="gallery-arrow right" onclick="galleryNav(\'' + p.id + '\',1,event)"><i class="fas fa-chevron-right"></i></div>'
+          : '';
+        var dots = imgs.length > 1
+          ? '<div class="gallery-dots">' + imgs.map(function(_,i){return '<span class="' + (i===idx?'active':'') + '"></span>';}).join('') + '</div>'
+          : '';
+        return '<div class="product-card" style="animation-delay:' + (ci * 0.08) + 's"><div class="product-card-img product-gallery"><img src="' + escHtml(safeImg(imgs[idx])) + '"><span class="product-type-badge">' + escHtml(p.type) + '</span>' + arrows + dots + '</div><div class="product-card-body"><h3>' + escHtml(p.name) + '</h3><div class="price-row"><div class="price-range">' + formatPrice(p.sizes[0].price) + '</div><button class="btn btn-primary btn-sm" onclick="addToCart(\'' + p.id + '\')"><i class="fas fa-plus"></i> Add</button></div></div></div>';
+      }).join('');
+
+      return '<div class="section"><div class="section-header"><h2>' + escHtml(sect.toUpperCase()) + ' Products</h2></div><div class="product-grid">' + cards + '</div></div>';
+    }).join('');
+
+    app.innerHTML = nav + '<div class="hero"><div class="hero-pattern"></div><div class="hero-runner" style="animation-delay:0.5s"><i class="fas fa-cookie-bite"></i></div><div class="hero-runner" style="animation-delay:3.5s;bottom:60px"><i class="fas fa-utensils"></i></div><div class="hero-content"><div class="hero-text"><div class="hero-logo-wrap"><div class="hero-logo">' + LOGO_SVG + '</div></div><div class="hero-cta-slideshow"><div class="hero-cta-slide' + (heroCtaIndex===0?' active':'') + '">Ready for a snack?</div><div class="hero-cta-slide' + (heroCtaIndex===1?' active':'') + '">Let\'s go get some <i class="fas fa-arrow-right"></i></div></div><h1><em>Slice</em> Snacks</h1><p>' + escHtml(state.storeDescription) + '</p></div></div></div>' + sectionsHtml;
+    startHeroCtaCycle();
+  }
+}
+
+function loginAdmin(){
+  var pass = document.getElementById('admin-pass').value;
+  if(pass === state.adminPassword){
+    state.adminAuth = true;
+    formImages = [];
+    renderApp();
+    refreshFromBackend(); // pull the latest data as soon as pilot opens
+  } else {
+    showToast('Invalid credentials', 'error');
+  }
+}
+
+function changeAdminPassword(){
+  var current = document.getElementById('current-pass-input').value;
+  var next = document.getElementById('new-pass-input').value;
+  var confirm = document.getElementById('confirm-pass-input').value;
+  if(current !== state.adminPassword){
+    showToast('Current password is incorrect', 'error');
+    return;
+  }
+  if(!next || next.length < 4){
+    showToast('New password must be at least 4 characters', 'error');
+    return;
+  }
+  if(next !== confirm){
+    showToast('New passwords do not match', 'error');
+    return;
+  }
+  state.adminPassword = next;
+  showToast('Password updated successfully!');
+  persistConfig();
+  renderApp();
+}
+
+function openEditProductModal(id){
+  var p = state.products.find(function(item){ return item.id === id; });
+  if(!p) return;
+  formImages = (p.images || []).slice();
+
+  var sectOptions = state.sections.map(function(s){
+    return '<option value="' + escHtml(s) + '" ' + (p.type === s ? 'selected' : '') + '>' + escHtml(s.toUpperCase()) + '</option>';
+  }).join('');
+
+  var body = '<div class="form-group"><label>Product Name</label><input type="text" id="edit-p-name" class="form-control" value="' + escHtml(p.name) + '"></div><div class="form-group"><label>Photos</label>' + renderImgManager() + '</div><div class="form-group"><label>Section / Category</label><select id="edit-p-type" class="form-control">' + sectOptions + '</select></div><div class="form-group"><label>Price</label><input type="number" id="edit-p-price" class="form-control" value="' + p.sizes[0].price + '"></div>';
+  var footer = '<button class="btn btn-outline" onclick="hideModal()">Cancel</button><button class="btn btn-dark" onclick="saveProductEdits(\'' + p.id + '\')">Save Changes</button>';
+
+  showModal('Edit Product Details', body, footer);
+}
+
+function saveProductEdits(id){
+  var p = state.products.find(function(item){ return item.id === id; });
+  if(p){
+    p.name = document.getElementById('edit-p-name').value;
+    p.type = document.getElementById('edit-p-type').value;
+    p.sizes[0].price = Number(document.getElementById('edit-p-price').value) || p.sizes[0].price;
+    p.images = formImages.slice();
+    hideModal();
+    showToast('Product updated successfully!');
+    persistConfig();
+    renderApp();
+  }
+}
+
+function deleteProduct(id){
+  state.products = state.products.filter(function(p){return p.id!==id;});
+  state.cart = state.cart.filter(function(i){return i.productId!==id;});
+  showToast('Product deleted', 'info');
+  persistConfig();
+  renderApp();
+}
+
+function addNewProduct(){
+  var name = document.getElementById('new-p-name').value;
+  var type = document.getElementById('new-p-type').value;
+  var price = document.getElementById('new-p-price').value || 1000;
+
+  if(!name){
+    showToast('Product name is required', 'error');
+    return;
+  }
+  if(!type){
+    showToast('Add a section first', 'error');
+    return;
+  }
+
+  state.products.push({
+    id: genId(),
+    name: name,
+    type: type,
+    description: 'Delicious and freshly made.',
+    images: formImages.slice(),
+    sizes: [{label: 'Standard', price: Number(price)}],
+    inStock: true,
+    featured: false
+  });
+
+  formImages = [];
+  showToast('New product added successfully!');
+  persistConfig();
+  renderApp();
+}
+
+function addNewSection(){
+  var name = document.getElementById('new-section-name').value.trim().toLowerCase();
+  if(!name){
+    showToast('Section name cannot be empty', 'error');
+    return;
+  }
+  if(state.sections.indexOf(name) !== -1){
+    showToast('Section already exists', 'warning');
+    return;
+  }
+  state.sections.push(name);
+  showToast('New product section added!');
+  persistConfig();
+  renderApp();
+}
+
+function removeSection(name){
+  state.sections = state.sections.filter(function(s){return s!==name;});
+  showToast('Section removed', 'info');
+  persistConfig();
+  renderApp();
+}
+
+function savePaymentNumber(){
+  var input = document.getElementById('payment-number-input');
+  var val = input ? input.value.trim() : '';
+  if(!val){
+    showToast('Payment number cannot be empty', 'error');
+    return;
+  }
+  state.paymentNumber = val;
+  showToast('Payment number updated!');
+  persistConfig();
+  renderApp();
+}
+
+function togglePickupDay(day){
+  var idx = state.pickupDays.indexOf(day);
+  if(idx === -1){
+    state.pickupDays.push(day);
+  } else {
+    state.pickupDays.splice(idx, 1);
+  }
+  showToast('Pickup days updated');
+  persistConfig();
+  renderApp();
+}
+
+function toggleDeliveryDay(day){
+  var idx = state.deliveryDays.indexOf(day);
+  if(idx === -1){
+    state.deliveryDays.push(day);
+  } else {
+    state.deliveryDays.splice(idx, 1);
+  }
+  showToast('Delivery days updated');
+  persistConfig();
+  renderApp();
+}
+
+// Initializing application state: load shared data from the backend, then render.
+loadState().then(function(){
+  renderApp();
+}).catch(function(e){
+  console.error('Startup load failed, running with defaults', e);
+  renderApp();
+});
+</script>
+</body>
+</html>
